@@ -1,24 +1,27 @@
 const express = require("express");
-const router = express.Router();
 const { User } = require('../models');
 const SHA256 = require('crypto-js/sha256');
+const { isNotLoggedIn } = require('./middlewares');
 
-router.post('/', async (req, res, next) => {
+const router = express.Router();
+
+router.post('/', isNotLoggedIn, async (req, res, next) => {
+  const { email, nick, password } = req.body;
   try {
     const exUser = await User.findOne({
       where: {
-        email: req.body.email,
+        email,
       }
     });
     if (exUser) {
       return res.json({ success: false });
     }
 
-    const hashedPassword = SHA256(req.body.password + req.body.email).toString();
+    const hashedPassword = SHA256(password + email).toString();
 
     await User.create({
-      email: req.body.email,
-      nick: req.body.nick,
+      email,
+      nick,
       password: hashedPassword,
     });
     return res.status(200).json({

@@ -1,9 +1,11 @@
 const express = require('express');
-const router = express.Router();
 const passport = require('passport');
 const { User } = require("../models");
+const { isNotLoggedIn } = require('./middlewares');
 
-router.post('/', async (req, res, next) => {
+const router = express.Router();
+
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   const Login = await User.findOne({
     where: {
       email: req.body.email,
@@ -15,13 +17,19 @@ router.post('/', async (req, res, next) => {
       res.status(401).json({ loginSuccess: false });
     }
     if (info) {
-      return res.status(401).json({ loginSuccess: false });
+      return res.status(401).json({ loginSuccess: false, message: info });
     }
     return req.login(user, async (loginErr) => {
       if (loginErr) {
         return res.status(400).json({ loginSuccess: false });
       }
-      return res.status(200).json({ loginSuccess: true, userId: Login.id });
+      const UserInfo = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          exclude: ['password']
+        }
+      })
+      return res.status(200).json({ UserInfo , loginSuccess : true });
     });
   })(req, res, next);
 });

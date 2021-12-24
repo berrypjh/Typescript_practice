@@ -12,7 +12,7 @@ dotenv.config();
 const Router = require('./routes');    
 
 const app = express();
-passportConfig(); // 패스포트 설정
+passportConfig(); 
 
 app.set('port', process.env.PORT || 8002);
 

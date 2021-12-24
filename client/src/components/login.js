@@ -25,7 +25,6 @@ const Login = () => {
 
     Axios.post("/api/login", body)
       .then(response => {
-        console.log(response);
         if (response.data.loginSuccess) {
           navigate('/')
         } else {
