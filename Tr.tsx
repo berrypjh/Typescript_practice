@@ -1,5 +1,5 @@
-import { Dispatch, FunctionComponent, memo, useMemo } from "react";
 import * as React from "react";
+import { Dispatch, FunctionComponent, memo, useMemo } from "react";
 import Td from "./Td";
 
 interface Props {
@@ -8,9 +8,7 @@ interface Props {
   dispatch: Dispatch<any>;
 }
 
-const Tr: FunctionComponent<Props> = ({ rowData, rowIndex, dispatch }) => {
-  console.log("tr rendered");
-
+const Tr: FunctionComponent<Props> = memo(({ rowData, rowIndex, dispatch }) => {
   return (
     <tr>
       {Array(rowData.length)
@@ -18,13 +16,7 @@ const Tr: FunctionComponent<Props> = ({ rowData, rowIndex, dispatch }) => {
         .map((td, i) =>
           useMemo(
             () => (
-              <Td
-                key={i}
-                dispatch={dispatch}
-                rowIndex={rowIndex}
-                cellIndex={i}
-                cellData={rowData[i]}
-              >
+              <Td key={i} dispatch={dispatch} rowIndex={rowIndex} cellIndex={i} cellData={rowData[i]}>
                 {""}
               </Td>
             ),
@@ -33,6 +25,6 @@ const Tr: FunctionComponent<Props> = ({ rowData, rowIndex, dispatch }) => {
         )}
     </tr>
   );
-};
+});
 
 export default memo(Tr);
