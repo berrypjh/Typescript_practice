@@ -1,35 +1,28 @@
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Near, connect, keyStores } from "near-api-js";
-import {
-  BlockId,
-  BlockReference,
-  BlockResult,
-} from "near-api-js/lib/providers/provider";
+import { connect, keyStores } from "near-api-js";
+import { BlockId, BlockReference, BlockResult } from "near-api-js/lib/providers/provider";
 
 const Home = () => {
   const keyStore = new keyStores.BrowserLocalStorageKeyStore();
 
-  const nearConfig = useCallback(() => {
-    return {
+  const getBlockInfo = useCallback(async (blockId?: BlockId) => {
+    const near = await connect({
       keyStore,
       networkId: "testnet",
       nodeUrl: "https://archival-rpc.testnet.near.org",
-    };
-  }, []);
+    });
 
-  const getBlockInfo = useCallback(async (blockId?: BlockId) => {
-    const near = await connect(nearConfig());
-    const blockQuery: BlockReference = blockId
-      ? { blockId }
-      : { finality: "final" };
-
-    const blockInfo = await near.connection.provider.block(blockQuery);
+    const blockInfo = await near.connection.provider.block({
+      finality: "final",
+    });
     console.log(blockInfo);
+    const response = await near.connection.provider.block({ blockId: 100000000 });
+    console.log(response);
     return blockInfo;
   }, []);
 
   useEffect(() => {
-    getBlockInfo("");
+    getBlockInfo();
   }, []);
 
   return <div>Home</div>;
