@@ -75,6 +75,7 @@ module.exports = {
       os: require.resolve("os-browserify"),
       url: require.resolve("url"),
       path: require.resolve("path-browserify"),
+      util: false,
       fs: false,
       net: false,
     },

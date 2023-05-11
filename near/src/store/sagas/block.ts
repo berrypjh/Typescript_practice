@@ -6,6 +6,7 @@ import { BlockResult } from "near-api-js/lib/providers/provider";
 // NEAR Connect
 async function connetNear() {
   const keyStore = new keyStores.BrowserLocalStorageKeyStore();
+  console.log(keyStore);
 
   const near = await connect({
     keyStore,
